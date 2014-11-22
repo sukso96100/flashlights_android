@@ -84,7 +84,7 @@ public class MainActivity extends ActionBarActivity {
 
     public void flashLightOn() {
 
-        param.setFlashMode(Camera.Parameters.FLASH_MODE_OFF);
+        param.setFlashMode(Camera.Parameters.FLASH_MODE_TORCH);
         camera.setParameters(param);
         camera.startPreview();
 
