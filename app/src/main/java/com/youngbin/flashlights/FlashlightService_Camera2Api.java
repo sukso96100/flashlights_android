@@ -82,6 +82,7 @@ public class FlashlightService_Camera2Api extends Service {
             @Override
             public void onError(CameraDevice camera, int error) {
                 Log.d(TAG, "CameraDevice.StateCallback() - onError");
+                Log.d(TAG, "Error Code - " + error);
 //                mCamDevice.close();
                 mCamDevice = null;
                 stopSelf();
