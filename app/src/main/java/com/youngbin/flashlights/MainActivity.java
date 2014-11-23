@@ -1,5 +1,6 @@
 package com.youngbin.flashlights;
 
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -28,13 +29,20 @@ public class MainActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        if(Build.VERSION.SDK_INT>=21){
+            startActivity(new Intent(this, MainActivity2.class));
+        }else{}
+
         YellowDrawable  = new ColorDrawable(Color.parseColor("#f1c40f"));
         DarkBlueDrawable = new ColorDrawable(Color.parseColor("#34495e"));
-        camera = Camera.open();
-        param = camera.getParameters();
+
 
         final RelativeLayout Background = (RelativeLayout)findViewById(R.id.background);
         ImageView Flashlights = (ImageView)findViewById(R.id.flashlights);
+
+        camera = Camera.open();
+        param = camera.getParameters();
+
         Flashlights.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -83,7 +91,7 @@ public class MainActivity extends ActionBarActivity {
     }
 
     public void flashLightOn() {
-
+        param = camera.getParameters();
         param.setFlashMode(Camera.Parameters.FLASH_MODE_TORCH);
         camera.setParameters(param);
         camera.startPreview();
@@ -91,7 +99,7 @@ public class MainActivity extends ActionBarActivity {
     }
 
     public void flashLightOff() {
-
+        param = camera.getParameters();
         param.setFlashMode(Camera.Parameters.FLASH_MODE_OFF);
         camera.setParameters(param);
         camera.stopPreview();
