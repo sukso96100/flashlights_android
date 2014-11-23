@@ -53,10 +53,23 @@ public class MainActivity extends ActionBarActivity {
             @Override
             public void onClick(View v) {
                 if(isFlashlightsOn){
+                    getSupportActionBar().setBackgroundDrawable(DarkBlueDrawable);
+                    Background.setBackgroundColor(Color.parseColor("#34495e"));
+                    if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.LOLLIPOP){
+                        getWindow().setStatusBarColor(Color.parseColor("#ff213242"));
+                    }
+
+
                     isFlashlightsOn = false;
                     serviceControl(false);
                     Log.d(TAG,"Turning Off");
                 }else{
+                    getSupportActionBar().setBackgroundDrawable(YellowDrawable);
+                    Background.setBackgroundColor(Color.parseColor("#f1c40f"));
+                    if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.LOLLIPOP){
+                        getWindow().setStatusBarColor(Color.parseColor("#f39c12"));
+                    }
+
                     isFlashlightsOn = true;
                     serviceControl(true);
                     Log.d(TAG,"Turning On");
