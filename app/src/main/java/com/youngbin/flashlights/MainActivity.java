@@ -10,12 +10,14 @@ import android.hardware.Camera;
 import android.os.Build;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 public class MainActivity extends ActionBarActivity {
+    private String TAG = "MainActivity";
     private boolean isFlashlightsOn = false;
     private ColorDrawable YellowDrawable;
     private ColorDrawable DarkBlueDrawable;
@@ -34,8 +36,8 @@ public class MainActivity extends ActionBarActivity {
         isFlashlightsOn = Pref.getBoolean("toggle",false);
         serviceControl(isFlashlightsOn);
 
-        ServiceCam2 = new Intent(this, FlashlightService_Camera2Api.class);
-        ServiceOldCam = new Intent(this, FlashlightService_OldCameraApi.class);
+        ServiceCam2 = new Intent(MainActivity.this, FlashlightService_Camera2Api.class);
+        ServiceOldCam = new Intent(MainActivity.this, FlashlightService_OldCameraApi.class);
 
         YellowDrawable  = new ColorDrawable(Color.parseColor("#f1c40f"));
         DarkBlueDrawable = new ColorDrawable(Color.parseColor("#34495e"));
@@ -53,9 +55,11 @@ public class MainActivity extends ActionBarActivity {
                 if(isFlashlightsOn){
                     isFlashlightsOn = false;
                     serviceControl(false);
+                    Log.d(TAG,"Turning Off");
                 }else{
                     isFlashlightsOn = true;
                     serviceControl(true);
+                    Log.d(TAG,"Turning On");
                 }
             }
         });

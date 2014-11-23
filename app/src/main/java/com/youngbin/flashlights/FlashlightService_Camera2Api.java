@@ -45,9 +45,9 @@ public class FlashlightService_Camera2Api extends Service {
     @Override
     public void onCreate(){
         super.onCreate();
-        if(Build.VERSION.SDK_INT<Build.VERSION_CODES.LOLLIPOP){
-            stopSelf();
-        }
+//        if(Build.VERSION.SDK_INT<Build.VERSION_CODES.LOLLIPOP){
+//            stopSelf();
+//        }
         try {
             openCamera();
         } catch (CameraAccessException e) {
