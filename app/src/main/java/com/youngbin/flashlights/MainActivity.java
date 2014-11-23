@@ -1,6 +1,8 @@
 package com.youngbin.flashlights;
 
+import android.annotation.TargetApi;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -8,13 +10,10 @@ import android.hardware.Camera;
 import android.os.Build;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
-
 
 public class MainActivity extends ActionBarActivity {
     private boolean isFlashlightsOn = false;
@@ -22,6 +21,8 @@ public class MainActivity extends ActionBarActivity {
     private ColorDrawable DarkBlueDrawable;
     private Camera camera;
     private Camera.Parameters param;
+    Intent ServiceCam2;
+    Intent ServiceOldCam;
 
 
     @Override
@@ -29,9 +30,12 @@ public class MainActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        if(Build.VERSION.SDK_INT>=21){
-            startActivity(new Intent(this, MainActivity2.class));
-        }else{}
+        SharedPreferences Pref = getPreferences(MODE_PRIVATE);
+        isFlashlightsOn = Pref.getBoolean("toggle",false);
+        serviceControl(isFlashlightsOn);
+
+        ServiceCam2 = new Intent(this, FlashlightService_Camera2Api.class);
+        ServiceOldCam = new Intent(this, FlashlightService_OldCameraApi.class);
 
         YellowDrawable  = new ColorDrawable(Color.parseColor("#f1c40f"));
         DarkBlueDrawable = new ColorDrawable(Color.parseColor("#34495e"));
@@ -46,63 +50,38 @@ public class MainActivity extends ActionBarActivity {
         Flashlights.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(!isFlashlightsOn){
-                    isFlashlightsOn = true;
-                    if(Build.VERSION.SDK_INT>=21){
-                        getWindow().setStatusBarColor(Color.parseColor("#f39c12"));
-                    }else{}
-                    getSupportActionBar().setBackgroundDrawable(YellowDrawable);
-                    Background.setBackgroundColor(Color.parseColor("#f1c40f"));
-                    flashLightOn();
-                }else{
+                if(isFlashlightsOn){
                     isFlashlightsOn = false;
-                    if(Build.VERSION.SDK_INT>=21){
-                        getWindow().setStatusBarColor(Color.parseColor("#ff213242"));
-                    }else{}
-                    getSupportActionBar().setBackgroundDrawable(DarkBlueDrawable);
-                    Background.setBackgroundColor(Color.parseColor("#34495e"));
-                    flashLightOff();
+                    serviceControl(false);
+                }else{
+                    isFlashlightsOn = true;
+                    serviceControl(true);
                 }
             }
         });
     }
 
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+    private void serviceControl(boolean Toggle){
+        if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.LOLLIPOP){
+            if(Toggle){
+//                stopService(ServiceCam2);
+                startService(ServiceCam2);
+            }else{
+                try{
+                    stopService(ServiceCam2);
+                }catch (Exception e){}
+            }
+        }else{
+            if(Toggle){
+//                stopService(ServiceOldCam);
+                startService(ServiceOldCam);
+            }else{
+                try {
+                    stopService(ServiceOldCam);
+                }catch (Exception e){}
+            }
         }
-
-        return super.onOptionsItemSelected(item);
     }
 
-    public void flashLightOn() {
-        param = camera.getParameters();
-        param.setFlashMode(Camera.Parameters.FLASH_MODE_TORCH);
-        camera.setParameters(param);
-        camera.startPreview();
-
-    }
-
-    public void flashLightOff() {
-        param = camera.getParameters();
-        param.setFlashMode(Camera.Parameters.FLASH_MODE_OFF);
-        camera.setParameters(param);
-        camera.stopPreview();
-//        camera.release();
-    }
 }

@@ -24,6 +24,17 @@
             android:name="com.youngbin.flashlights.MainActivity2"
             android:label="@string/title_activity_main_activity2" >
         </activity>
+
+        <service
+            android:name="com.youngbin.flashlights.FlashlightService_Lollipop"
+            android:enabled="true"
+            android:exported="true" >
+        </service>
+        <service
+            android:name="com.youngbin.flashlights.FlashlightService_OldCameraApi"
+            android:enabled="true"
+            android:exported="true" >
+        </service>
     </application>
 
 </manifest>
